@@ -3,7 +3,7 @@
 
     "image": "mcr.microsoft.com/devcontainers/python:3.14",
 
-    "postCreateCommand": "pip install irispie-ce>=0.80.2 ipython macrotap>=0.3.0",
+    "postCreateCommand": "pip install 'irispie-ce>=0.80.2' ipython 'macrotap>=0.3.0'",
 
     "customizations": {
         "vscode": {
