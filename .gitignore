@@ -1,1 +1,10 @@
 .DS_Store
+.venv*
+.venv.*
+*.pkl
+*.zip
+*.xls
+*.xlsx
+sandbox/
+!sandbox/.gitkeep
+

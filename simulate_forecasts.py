@@ -2,8 +2,10 @@ r"""
 Simulate forecast scenarios
 """
 
-import sys
+# Import external packages
 import irispie as ir
+
+# Import internal modules
 import file_structure as fs
 
 
