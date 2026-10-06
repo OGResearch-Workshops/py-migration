@@ -29,5 +29,5 @@ cpi = 100 * ir.log(cpi)
 
 rs = ir.aggregate(TB3MS, ir.QUARTERLY, method="mean", )
 r5y = ir.aggregate(GS5, ir.QUARTERLY, method="mean", )
-r10y = ir.aggregate(GS10, ir.QUARTERLY, method="
+r10y = ir.aggregate(GS10, ir.QUARTERLY, method="mean", )
 

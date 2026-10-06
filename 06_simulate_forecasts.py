@@ -12,11 +12,13 @@ import file_structure as fs
 model = ir.Simultaneous.from_pickle_file(fs.MODEL_PICKLE_FILE, )
 filter_db = ir.Databox.from_csv_file(fs.FILTER_DATA_FILE, )
 
-history_end = ir.qq(2025,4)
-forecast_start = history_end + 1
-forecast_end = history_end + 4*4
-forecast_span = forecast_start >> forecast_end
-chart_span = forecast_start-4*10 >> forecast_end
+
+filter_end = filter_db["filter_span"].end
+history_end = filter_end
+fcast_start = history_end + 1
+fcast_end = history_end + 4*4
+fcast_span = fcast_start >> fcast_end
+chart_span = fcast_start-4*10 >> fcast_end
 
 steady_db = model.build_steady_paths(chart_span, )
 
@@ -27,8 +29,8 @@ steady_db = model.build_steady_paths(chart_span, )
 
 input_db0 = filter_db.copy()
 
-s0 = model.simulate(
-    input_db0, forecast_span,
+sim_db0 = model.simulate(
+    input_db0, fcast_span,
 )
 
 
@@ -37,18 +39,18 @@ s0 = model.simulate(
 # What macro conditions (output gap, inflation) would be consistent with a flat
 # nominal interest rate path?
 
-tune_span = forecast_start >> forecast_start+3
-p1 = ir.SimulationPlan(model, forecast_span, )
-p1.exogenize_anticipated(tune_span, "rs", )
-p1.endogenize_anticipated(tune_span, ["ant_shk_ad_cpi", "ant_shk_y_gap", ], )
+tune_span = fcast_start >> fcast_start+3
+plan1 = ir.SimulationPlan(model, fcast_span, )
+plan1.exogenize_anticipated(tune_span, "rs", )
+plan1.endogenize_anticipated(tune_span, ["ant_shk_ad_cpi", "ant_shk_y_gap", ], )
 
 input_db1 = filter_db.copy()
 input_db1["rs"][tune_span] = input_db1["rs"][history_end]
 
 
-s1 = model.simulate(
-    input_db1, forecast_span,
-    plan=p1,
+sim_db1 = model.simulate(
+    input_db1, fcast_span,
+    plan=plan1,
 )
 
 
@@ -58,8 +60,8 @@ s1 = model.simulate(
 # to inflation), meaning the output gap shocks would have to do more work to
 # achieve the same nominal interest rate path.
 
-tune_span = forecast_start >> forecast_start+3
-p2 = ir.SimulationPlan(model, forecast_span, )
+tune_span = fcast_start >> fcast_start+3
+p2 = ir.SimulationPlan(model, fcast_span, )
 p2.exogenize_anticipated(tune_span, "rs", )
 p2.endogenize_anticipated(tune_span, ["ant_shk_ad_cpi", "ant_shk_y_gap", ], )
 
@@ -67,8 +69,8 @@ input_db2 = filter_db.copy()
 input_db2["rs"][tune_span] = input_db2["rs"][history_end]
 input_db2["std_shk_ad_cpi"][tune_span] = 0.5
 
-s2 = model.simulate(
-    input_db2, forecast_span,
+sim_db2 = model.simulate(
+    input_db2, fcast_span,
     plan=p2,
     stds_from_data=True, # unnecessary since this is the default behavior
 )
@@ -80,7 +82,7 @@ s2 = model.simulate(
 ch = ir.Chartpack(
     tiles=(3,3),
     span=chart_span,
-    highlight=forecast_span,
+    highlight=fcast_span,
     legend=["Forecast 0", "Forecaast 1", "Forecast 2", "Steady state", ],
 )
 
@@ -97,7 +99,8 @@ f.add_charts([
     "Ant shock to nominal interest rate: ant_shk_rs",
 ])
 
-chart_db = ir.Databox.by_merging([s0, s1, s2, steady_db, ])
+chart_db = ir.Databox.by_merging([sim_db0, steady_db, ])
+# chart_db = ir.Databox.by_merging([sim_db0, sim_db1, sim_db2, steady_db, ])
 
 ch.plot(chart_db, )
 

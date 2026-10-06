@@ -16,7 +16,7 @@ simulation_span = simulation_start >> simulation_end
 chart_span = simulation_start-1 >> simulation_end
 
 d = m.build_steady_paths(simulation_span, )
-d["shk_y_gap"][simulation_start >> simulation_start+3] = -2
+d["shk_y_gap"][simulation_start >> simulation_start+3] = -3
 
 s0, info0 = m.simulate(
     d, simulation_span,
@@ -30,7 +30,7 @@ s1, info1 = m.simulate(
     solver_settings={"step_tolerance": 100, },
 )
 
-s = ir.Databox.by_merging((s0, s1), )
+s = ir.Databox.by_merging([s0, s1], )
 
 ch = ir.Chartpack(span=chart_span, )
 fig = ch.add_figure("Adverse demand shock")

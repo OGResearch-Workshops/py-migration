@@ -1,55 +1,47 @@
 
 ##
 
-import sys
+# Import standard and external packages
 import numpy as np
 import json as js
 import irispie as ir
-import wlogging as wl
-
-import create_model
-
-logger = wl.get_colored_two_liner("kalman_filter", level=wl.DEBUG, )
 
 
-logger.info("Reading model")
-m = create_model.main()
-logger.info("Done")
+# Import internal modules
+import file_structure as fs
 
 
-logger.info("Parameter values")
+m = ir.Simultaneous.from_pickle_file(fs.MODEL_PICKLE_FILE, )
+
 print(m.get_parameters())
 
 
-logger.info("Standard deviations of shocks")
 print(m.get_stds())
 
 
 ##
 
-logger.info("Reading databox with observations and shock assumptions")
 
 filt_db = ir.Databox.from_sheet(
-    "data_files/filt_data.csv",
+    fs.FILTER_DATA_FILE,
     date_creator=ir.Period.from_iso_string,
 )
 
 hist_db = ir.Databox.from_sheet(
-    "data_files/hist_data.csv",
+    fs.HISTORICAL_DATA_FILE,
     date_creator=ir.Period.from_iso_string,
 )
 
 obs_db = filt_db.copy(source_names=lambda n: n.startswith("obs_"), )
 
-alt_filt_db = ir.Databox.from_sheet(
-    "data_files/alt_filt_data.csv",
-    date_creator=ir.Period.from_iso_string,
-)
+# alt_filt_db = ir.Databox.from_sheet(
+#     "data_files/alt_filt_data.csv",
+#     date_creator=ir.Period.from_iso_string,
+# )
+# 
+# filt_db = alt_filt_db
 
-filt_db = alt_filt_db
 
-
-logger.info("Reading dates")
 with open("data_files/dates.json", "rt") as f:
     dates = js.load(f, )
 
@@ -95,7 +87,6 @@ in1_db["std_shk_diff_cpi"] = ir.Series(
 # in1_db["std_shk_obs_y"] = ir.Series(dates=ir.qq(2021,1), values=10, )
 in1_db["std_shk_obs_y"] = 10
 
-logger.info("Running Kalman filter: no shocks, fixed unknown")
 
 kf1_out = mm.kalman_filter(
     in1_db, filt_span,
@@ -104,22 +95,18 @@ kf1_out = mm.kalman_filter(
     prepend_initial=True,
     append_terminal=True,
     diffuse_method=diffuse_method,
-    logging_level=10,
 )
 
 smooth1_db = kf1_out.smooth_med
 
-logger.info("Resimulating kalman filter")
 
 sim1_in_db = smooth1_db
 
 sim1_db = mm.simulate(
     smooth1_db, filt_span,
-    logging_level=10,
 )
 
 
-sys.exit()
 
 ## Shock multipliers
 
@@ -138,7 +125,6 @@ del sim2_in_db["shk_y_gap"]
 
 sim2_db = mm.simulate(
     sim2_in_db, filt_span,
-    logging_level=10,
 )
 
 
@@ -151,7 +137,6 @@ plan3.swap_unanticipated(filt_span, ("y_gap", "shk_y_gap"), )
 sim3_db, sim3_info = mm.simulate(
     sim3_in_db, filt_span,
     plan=plan3,
-    logging_level=10,
     return_info=True,
 )
 
@@ -161,7 +146,6 @@ sys.exit()
 
 ##
 
-logger.info("Running Kalman filter: no shocks, approx diffuxe")
 out2, kinfo2 = m.kalman_filter(
     filt_db, filt_span,
     stds_from_data=False,
@@ -170,13 +154,11 @@ out2, kinfo2 = m.kalman_filter(
     diffuse_method="approx_diffuse",
 )
 
-logger.info("Resimulating kalman filter")
 sim2, sinfo2 = m.simulate(
     out2.smooth_med, filt_span,
     shocks_from_data=True,
 )
 
-logger.info("Running Kalman filter: no shocks, approx diffuxe, scale 1e8")
 out3, kinfo3 = m.kalman_filter(
     filt_db, ext_filt_span,
     stds_from_data=False,
@@ -186,14 +168,12 @@ out3, kinfo3 = m.kalman_filter(
     diffuse_scale=1e8,
 )
 
-logger.info("Resimulating kalman filter")
 sim3, sinfo3 = m.simulate(
     out3.smooth_med, ext_filt_span,
     shocks_from_data=True,
 )
 
 
-logger.info("Running Kalman filter: all shocks, fixed unknown")
 out4, kinfo4 = m.kalman_filter(
     filt_db, filt_span,
     stds_from_data=True,
@@ -202,7 +182,6 @@ out4, kinfo4 = m.kalman_filter(
     diffuse_method=diffuse_method,
 )
 
-logger.info("Resimulating kalman filter")
 sim4, sinfo4 = m.simulate(out4.smooth_med, filt_span, )
 
 names = m.get_names(kind=ir.TRANSITION_VARIABLE, )
@@ -210,14 +189,12 @@ med4 = out4.smooth_med.copy(source_names=names, )
 std4 = out4.smooth_std.copy(source_names=names, )
 
 
-logger.info("Writing smooth medians to csv")
 med4.to_sheet(
     "data_files/python_smooth_med.csv",
     description_row=False,
     date_formatter=ir.Period.to_iso_string,
 )
 
-logger.info("Writing smooth stds to csv")
 std4.to_sheet(
     "data_files/python_smooth_std.csv",
     description_row=False,
@@ -273,7 +250,6 @@ sim3, sinfo3 = m.simulate(
     input_db3,
     filt_span,
     plan=p,
-    logging_level=wl.DEBUG,
     split_frames=True,
 )
 
@@ -281,7 +257,6 @@ resim3, *_ = m.simulate(
     sim3,
     filt_span,
     shocks_from_data=True,
-    logging_level=wl.DEBUG,
 )
 
 sys.exit(0)
