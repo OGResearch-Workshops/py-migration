@@ -23,7 +23,7 @@
     "Real short rate" rrs
     "Real short rate trend" rrs_tnd
     "Real short rate gap" rrs_gap
-    xxx
+
 
 !transition_shocks
 
@@ -58,8 +58,6 @@
 
 
 !transition_equations
-
-    xxx = !for <range(0, 4)> !do + rs[+?] !end;
 
     "Real GDP trend gap identity"
     y = y_tnd + y_gap;
