@@ -1,59 +1,85 @@
 
-# Migrating `.m` to `.py`
+# Migrating from Matlab to Python
+
+`.m` &rarr; `.py`
 
 ---
 
 ### Why away from Matlab
 
-* Cost of Matlab
+* Cost of Matlab licenses
 
-* Less familiarity with Matlab in new hires
+* New hires increasingly arrive knowing Python (and R), not Matlab
 
-* Inefficiency of closed-source commercial solution ("ecosystem")
+* Closed, vendor-controlled ecosystem
+
+* Reproducible, license-free deployment: servers, CI, and containers need no
+  license to be provisioned (this workshop itself runs in a dev container)
 
 
 ---
 
 ### Why Python
 
-* Scriptable non-compiled language
+* Widely used, scriptable, non-compiled, general-purpose language
 
-* Sensible numerical analysis, matrix algebra
+* Mature numerical arrays and linear algebra (`numpy`, `scipy`)
 
-* Business continuity
+* Business continuity:
 
-* Our choice was between Python vs Julia
+  * no dependence on a single vendor
+
+  * a long track record: Python has been around for over 30 years, whereas
+    younger platforms (e.g. Julia) carry a greater risk of being abandoned,
+    discontinued, or fading away
+
+* Our choice was between Python and Julia; we chose Python for its longevity,
+  larger ecosystem, and wider familiarity among our users
 
 
 ---
 
 ### What's ready
 
-* Our own package(s), source-available licensing
+* Our own packages: `irispie` (source-available), `datapie` and `macrotap`
+  (MIT)
 
-* Modeling package(s) replicating and extending the functionality of
-  the Iris Toolbox
+* Modeling package(s) replicating and extending the functionality of the Iris
+  Toolbox, including structural models and VAR-type time series models
 
-* Packages delivering other functionality (reporting, data acquisition, etc.)
+* Packages delivering other functionality (data handling, data acquisition,
+  reporting, etc.)
 
 ---
 
-### What's missing but in the pipeline
+### What's in the pipeline
 
-* Estimation, priors, system priors
+##### `irispie`
 
+* Estimation (including Bayes) of *structural* models, priors, system priors
+
+* Nonlinear quasi-filtering
+
+* Factor models
+
+##### `cellport`
+
+* Excel-based reporting
 
 ---
 
 ### What's different
 
-* Python's different (coming to that later)
+* Python itself is different (see the last two sections)
 
 * Our own more structured approach to designing packages (a larger number of
   smaller packages, with a clear focus)
 
-* Modeling logic exactly the same, however with more of "explicit better than
-  implicit", "only one way to do a thing"
+* Modeling logic essentially the same, however with more of "explicit better
+  than implicit", "only one way to do a thing"
+
+* A side-by-side comparison of the Iris Toolbox and `irispie` is provided
+  separately
 
 
 ---
@@ -64,7 +90,8 @@
 
 * In fact, plethora of them... each with some strong and some weak points
 
-* Python packages
+* Packages are installed with `pip`, ideally into a separate virtual
+  environment for each project
 
 
 ---
@@ -77,7 +104,26 @@
 
 * Extremely extensive ecosystem of packages
 
-* A couple of gotchas: no scripts, assignment by reference, functions vs
-  methods, 
+* A couple of gotchas:
+
+  * no scripts in the Matlab sense (each file has its own namespace)
+
+  * assignment by reference (copy explicitly when you need a copy)
+
+  * methods rather than functions (`model.simulate(...)`)
+
+  * plain lists are indexed from 0 (time series are indexed by period)
+
+  * indentation is part of the syntax
 
 
+---
+
+### Where to go next
+
+* The workshop `README.md`: the model, the scripts, and how to run them
+
+* The side-by-side Iris Toolbox vs `irispie` comparison
+
+* `irispie` tutorials and documentation:
+  https://iris-solutions-team.github.io/irispie-pages

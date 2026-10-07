@@ -301,8 +301,9 @@ All parameters live in `calibrate_parameters.db.py`:
 | Expectations | `c1_ad_cpi_ste = 1` (fully forward-looking), `c2_ad_cpi_ste = 0.1` (zero-floor effect) |
 | Shock sizes | `std_shk_*` for each shock; measurement errors on the observed series set to 0 |
 
-These are **illustrative, not estimated**. Estimation tools are on the
-IrisPie roadmap (see `docs/m_to_py_migration.md`).
+These are **illustrative, not estimated**. Estimation of structural models
+(along with nonlinear quasi-filtering and factor models) is on the IrisPie
+roadmap (see `docs/m_to_py_migration.md`).
 
 The resulting steady state (`data_files/steady_table.csv`) is: inflation 2%,
 trend growth 1.5%, nominal rate 2%, real rate 0%, and zero gaps.
