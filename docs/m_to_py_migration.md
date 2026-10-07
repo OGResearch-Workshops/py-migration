@@ -41,11 +41,12 @@
 
 ### What's ready
 
-* Our own packages: `irispie` (source-available), `datapie` and `macrotap`
-  (MIT)
+* Our own ecosystem of packages: `irispie` (source-available), `datapie`,
+  `rephorm`, `macrotap` (MIT)
 
 * Modeling package(s) replicating and extending the functionality of the Iris
-  Toolbox, including structural models and VAR-type time series models
+  Toolbox, most importantly structural models, sequantial models, and empirical
+  time series models
 
 * Packages delivering other functionality (data handling, data acquisition,
   reporting, etc.)
