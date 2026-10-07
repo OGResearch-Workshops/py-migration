@@ -1,7 +1,6 @@
 
 # Migrating from Matlab to Python
 
-`.m` &rarr; `.py`
 
 ---
 
