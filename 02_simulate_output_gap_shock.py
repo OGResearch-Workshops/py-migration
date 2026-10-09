@@ -10,10 +10,11 @@ model = ir.Simultaneous.from_pickle_file("pickle_files/model.pkl")
 sim_start = ir.ii(1)
 sim_end = ir.ii(20)
 sim_span = sim_start >> sim_end
-chart_span = sim_start-1 >> sim_end
+chart_span = sim_start-4 >> sim_end
 
 # Create a steady state databox
 db = model.build_steady_paths(sim_span)
+
 
 # Create a shock in the steady state databox
 db["shk_y_gap"][sim_start] = 1
@@ -21,7 +22,10 @@ db["shk_y_gap"][sim_start] = 1
 # Run a simulation using the model and the databox
 sim_db = model.simulate(db, sim_span)
 
-chart_db = sim_db
+
+# chart_db = sim_db
+
+chart_db = ir.Databox.by_merging( [sim_db, db] )
 
 ch = ir.Chartpack(
     tiles=(2, 3),

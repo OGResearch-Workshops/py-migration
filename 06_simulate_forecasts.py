@@ -34,6 +34,72 @@ sim_db0 = model.simulate(
 )
 
 
+plan3 = ir.SimulationPlan(model, fcast_span)
+plan3.exogenize_anticipated(fcast_start, "ad_cpi")
+plan3.endogenize_anticipated(fcast_start, "shk_ad_cpi")
+
+input_db3 = filter_db.copy()
+input_db3["ad_cpi"][fcast_start] = 3.2
+
+sim_db3 = model.simulate(
+    input_db3, fcast_span,
+    plan=plan3,
+)
+
+
+plan4 = ir.SimulationPlan(model, fcast_span)
+plan4.exogenize_anticipated(fcast_start, "ad_cpi")
+plan4.endogenize_anticipated(fcast_start, "shk_y_gap")
+
+input_db4 = filter_db.copy()
+input_db4["ad_cpi"][fcast_start] = 3.2
+
+sim_db4 = model.simulate(
+    input_db4, fcast_span,
+    plan=plan4,
+)
+
+
+
+plan5 = ir.SimulationPlan(model, fcast_span)
+plan5.exogenize_anticipated(fcast_start, "ad_cpi")
+plan5.endogenize_anticipated(fcast_start, "shk_rs")
+
+input_db5 = filter_db.copy()
+input_db5["ad_cpi"][fcast_start] = 3.2
+
+sim_db5 = model.simulate(
+    input_db5, fcast_span,
+    plan=plan5,
+)
+
+
+plan6 = ir.SimulationPlan(model, fcast_span)
+plan6.exogenize_anticipated(fcast_start+4, "ad_cpi")
+plan6.endogenize_anticipated(fcast_start+4, "shk_ad_cpi")
+
+input_db6 = filter_db.copy()
+input_db6["ad_cpi"][fcast_start+4] = 6
+
+sim_db6 = model.simulate(
+    input_db6, fcast_span,
+    plan=plan6,
+)
+
+plan7 = ir.SimulationPlan(model, fcast_span)
+plan7.exogenize_unanticipated(fcast_start+4, "ad_cpi")
+plan7.endogenize_unanticipated(fcast_start+4, "shk_ad_cpi")
+
+input_db7 = filter_db.copy()
+input_db7["ad_cpi"][fcast_start+4] = 6
+
+sim_db7 = model.simulate(
+    input_db7, fcast_span,
+    plan=plan7,
+)
+
+
+
 
 # Forecast 1
 # What macro conditions (output gap, inflation) would be consistent with a flat
@@ -42,7 +108,8 @@ sim_db0 = model.simulate(
 tune_span = fcast_start >> fcast_start+3
 plan1 = ir.SimulationPlan(model, fcast_span, )
 plan1.exogenize_anticipated(tune_span, "rs", )
-plan1.endogenize_anticipated(tune_span, ["ant_shk_ad_cpi", "ant_shk_y_gap", ], )
+# plan1.endogenize_anticipated(tune_span, ["ant_shk_ad_cpi", "ant_shk_y_gap", ], )
+plan1.endogenize_anticipated(tune_span, "shk_rs", )
 
 input_db1 = filter_db.copy()
 input_db1["rs"][tune_span] = input_db1["rs"][history_end]
@@ -55,6 +122,8 @@ sim_db1 = model.simulate(
 
 
 
+
+
 # Forecast 2
 # Same as forecast 1, but with a tighter Phillips curve (lower std for the shock
 # to inflation), meaning the output gap shocks would have to do more work to
@@ -63,11 +132,11 @@ sim_db1 = model.simulate(
 tune_span = fcast_start >> fcast_start+3
 p2 = ir.SimulationPlan(model, fcast_span, )
 p2.exogenize_anticipated(tune_span, "rs", )
-p2.endogenize_anticipated(tune_span, ["ant_shk_ad_cpi", "ant_shk_y_gap", ], )
+p2.endogenize_anticipated(tune_span, ["shk_ad_cpi", "shk_y_gap", ], )
 
 input_db2 = filter_db.copy()
 input_db2["rs"][tune_span] = input_db2["rs"][history_end]
-input_db2["std_shk_ad_cpi"][tune_span] = 0.5
+input_db2["std_shk_ad_cpi"][tune_span] = 0.1
 
 sim_db2 = model.simulate(
     input_db2, fcast_span,
@@ -99,7 +168,7 @@ f.add_charts([
     "Ant shock to nominal interest rate: ant_shk_rs",
 ])
 
-chart_db = ir.Databox.by_merging([sim_db0, steady_db, ])
+chart_db = ir.Databox.by_merging([sim_db0, sim_db1, sim_db2, steady_db, ])
 # chart_db = ir.Databox.by_merging([sim_db0, sim_db1, sim_db2, steady_db, ])
 
 ch.plot(chart_db, )

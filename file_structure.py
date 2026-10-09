@@ -18,3 +18,4 @@ FILTER_DATA_FILE = os.path.join(DATA_FILES_DIR, "filter_data.csv", )
 
 MODEL_PICKLE_FILE = os.path.join(PICKLE_FILES_DIR, "model.pkl", )
 
+
