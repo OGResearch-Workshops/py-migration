@@ -21,6 +21,7 @@ fred_names = hist_db.get_names()
 # data
 hist_db.execute_file("prepare_historical_data.db.py")
 
+
 # Remove the original FRED data series from the historical data database
 hist_db.remove(fred_names)
 
@@ -29,4 +30,3 @@ print(hist_db)
 
 # Save the historical data database to a CSV file
 hist_db.to_csv_file(fs.HISTORICAL_DATA_FILE)
-

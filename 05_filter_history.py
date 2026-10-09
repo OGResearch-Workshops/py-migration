@@ -26,9 +26,10 @@ hist_db = ir.Databox.from_csv(fs.HISTORICAL_DATA_FILE, )
 
 obs_db = hist_db.copy(
     source_names=("y", "rs", "cpi", ),
-    target_names=lambda n: f"obs_{n}",
-    # target_names=("obs_y", "obs_rs", "obs_cpi", ),
+    # target_names=lambda n: f"obs_{n}",
+    target_names=("obs_y", "obs_rs", "obs_cpi", ),
 )
+
 
 start_filt = ir.qq(2010,1)
 end_filt = ir.qq(2026,2)

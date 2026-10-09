@@ -5,6 +5,7 @@ Create and calibrate a model object from the source file
 
 # External packages
 import irispie as ir
+import sys
 
 # Internal modules
 import file_structure as fs
@@ -18,7 +19,6 @@ model = ir.Simultaneous.from_file(
     flat=False,
     description="Closed economy QPM"
 )
-
 
 # Assign parameters
 

@@ -54,15 +54,17 @@ fred_codes = [
 
 fred_db = mt.from_fred(fred_codes, )
 
-print(fred_db)
+
+fred_db0 = fred_db.copy()
+
+print(fred_db0)
 
 # Fill in missing values in the CPI (government shutdown)
 fred_db["CPIAUCSL"].fill_missing(method="log_linear", )
 fred_db["CPIAUCNS"].fill_missing(method="log_linear", )
 fred_db["UNRATE"].fill_missing(method="linear", )
 
-print(fred_db)
+print(fred_db0)
 
 # Save the raw FRED data to a CSV file
 fred_db.to_csv_file(fs.FRED_DATA_FILE, )
-
