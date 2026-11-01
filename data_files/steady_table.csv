@@ -8,7 +8,7 @@ ad_y_tnd,1.5,-0.0
 d4_y_tnd,1.5,-0.0
 cpi,1,0.5
 ad_cpi,2.0,0.0
-d4_cpi,2.0,-0.0
+d4_cpi,2.0,0.0
 ad_cpi_ste,2.0,0.0
 rs,2.0,0.0
 rs_unc,2.0,0.0
@@ -19,7 +19,7 @@ rrs_gap,-0.0,-0.0
 obs_y,1.0,0.375
 obs_rs,2.0,0.0
 obs_cpi,1.0,0.5
-obs_ad_y,1.5,0.0
+obs_ad_y,1.5,-0.0
 obs_y_gap,0.0,-0.0
 obs_ad_cpi,2.0,0.0
 ss_rrs,0,

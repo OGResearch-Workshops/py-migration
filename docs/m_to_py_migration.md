@@ -104,17 +104,19 @@
 
 * Extremely extensive ecosystem of packages
 
-* A couple of gotchas:
+---
 
-  * no scripts in the Matlab sense (each file has its own namespace)
+### Gotchas in Python (versus Matlab)
 
-  * assignment by reference (copy explicitly when you need a copy)
+* No scripts in the Matlab sense (each file has its own namespace)
 
-  * methods rather than functions (`model.simulate(...)`)
+* Assignment by reference (copy explicitly when you need a copy)
 
-  * plain lists are indexed from 0 (time series are indexed by period)
+* Methods rather than functions (`model.solve(...)` in Python vs `model = solve(model, ...)` in Matlab)
 
-  * indentation is part of the syntax
+* Lists and arrays are indexed from 0 (time series are indexed by period)
+
+* Indentation is part of the syntax
 
 
 ---
@@ -127,3 +129,4 @@
 
 * `irispie` tutorials and documentation:
   https://iris-solutions-team.github.io/irispie-pages
+

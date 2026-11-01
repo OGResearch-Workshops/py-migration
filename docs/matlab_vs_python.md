@@ -43,7 +43,7 @@ Python side.
 
 ### 3.1 Dates and ranges
 
-```matlab
+```Matlab
 startFilt = qq(2010,1);
 endFilt = qq(2026,2);
 filterRange = startFilt : endFilt;
@@ -62,7 +62,7 @@ filter_span = start_filt >> end_filt
 
 ### 3.2 Time series and databanks
 
-```matlab
+```Matlab
 d = databank.fromCSV("historical_data.csv");
 d.shk_y_gap(qq(2020,1)) = 1;
 databank.toCSV(d, "out.csv");
@@ -98,7 +98,7 @@ At the time of writing we did not find these Matlab directives in the Python
 parser: `!links`, `!dtrends`, `!ttrend`, `!import` / `!export`, `!switch`,
 `!function`.
 
-```matlab
+```Matlab
 m = Model.fromFile( ...
     "closed_economy_qpm.model" ...
     , linear=false ...
@@ -117,18 +117,18 @@ model = ir.Simultaneous.from_file(
 
 ### 3.4 Calibrate, steady state, solve
 
-```matlab
-m = assign(m, P);
-m = steady(m);
-m = solve(m);
+```Matlab
+model = assign(model, p);
+model = steady(model, fixLevel="y");
+checkSteady(model);
+model = solve(model);
 ```
 
 ```python
-model.assign_strict(parameters_db)
+model.assign_strict(p)
 
 plan = ir.SteadyPlan(model)
 plan.fix_level("y")
-model.assign_strict(y=1)
 
 model.solve_steady(plan=plan)
 model.check_steady()
@@ -146,7 +146,7 @@ model.solve_first_order()
 
 ### 3.5 Simulate
 
-```matlab
+```Matlab
 d = steadydb(m, 1:20);
 d.shk_y_gap(1) = 1;
 s = simulate(m, d, 1:20);
@@ -161,7 +161,7 @@ sim_db = model.simulate(db, sim_span)
 
 Choosing the method and solver:
 
-```matlab
+```Matlab
 s = simulate( ...
     m, d, range ...
     , method="stacked" ...
@@ -190,7 +190,7 @@ sim_db = model.simulate(
 
 ### 3.6 Conditional forecasts with plans
 
-```matlab
+```Matlab
 p = Plan.forModel(m, fcastRange);
 p = exogenize(p, tuneRange, "rs");
 p = endogenize(p, tuneRange, ["shk_ad_cpi", "shk_y_gap"]);
@@ -219,7 +219,7 @@ sim_db = model.simulate(
 
 ### 3.7 Kalman filter
 
-```matlab
+```Matlab
 [outDb, outModel, info] = kalmanFilter( ...
     m, obsDb, filterRange ...
     , unitRootInitials="fixedUnknown" ...
@@ -256,7 +256,7 @@ databank passed straight on to `simulate`.
 
 ### 3.9 Charts
 
-```matlab
+```Matlab
 ch = Chartpack( );
 ch.Range = startDate : endDate;
 add(ch, "Output gap: y_gap");
@@ -282,7 +282,7 @@ ch.plot(sim_db)
 
 ### 3.10 Saving and loading models
 
-```matlab
+```Matlab
 save("model.mat", "m");
 load("model.mat");
 ```
@@ -298,7 +298,7 @@ upgrading `irispie`, rebuild it from the model file (`01_create_model.py`).
 
 ## 4. Language-level habits to change
 
-* **Methods, not functions.** `simulate(m, d, range)` becomes
+* **Methods, not functions.** `m = simulate(m, d, range)` becomes
   `model.simulate(d, span)`.
 * **In-place updates.** Methods typically change the object and return nothing
   (section 3.4); Matlab code that reassigns (`m = steady(m)`) should not be
