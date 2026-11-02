@@ -39,6 +39,12 @@
 
 
 ---
+### Computational efficiency concerns?
+
+* Nothing to worry
+* Python uses a hybrid approach with highly optimized compiled libraries
+
+---
 
 ### What's ready
 
@@ -120,6 +126,21 @@
 
 * Indentation is part of the syntax
 
+---
+### Simplified porting checklist
+
+- [ ] Port the **model file** first; most of it should work unchanged. Check it  
+    against the list in section 3.3.
+- [ ] Port the **data** next: load the same data into a `Databox` and compare a  
+    few series against the Matlab databank.
+- [ ] Port the scripts **one task at a time**, in the order of section 3 (dates,  
+    data, model, steady state, simulate, filter, forecast).
+- [ ] Replace `m = f(m, ...)` patterns by in-place calls, and add `.copy()` where  
+    a separate version of an object is needed.
+- [ ] Compare **steady states and one simulation** against the Matlab results  
+    before going further.
+- [ ] Only then port charts and reports.
+- [ ] Run both Matlab and Python systems in parallel for some period of time
 
 ---
 
