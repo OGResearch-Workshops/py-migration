@@ -1,7 +1,6 @@
-
 # Iris Ecosystem Resources
 
-## Access to this `py-migration` repository
+## Access to the `py-migration` repository
 
 * Create a github.com account if you don't have one.
 
@@ -9,8 +8,9 @@
   include your GitHub username in the email.
 
 * Once you are notified that you have been granted access, you can visit the repository at
-  [github.com/OGResearch-Workshops/py-migration](https://github.com/OGResearch-Workshops/py-migration)
+  [github.com/ogresearch-workshops/py-migration](https://github.com/ogresearch-workshops/py-migration)
 
+* To create a Codespace and run the repository example programs, press the "Code" green button, select the "Codespaces" tab, and "Create codespace on master"
 
 ## IrisPie
 

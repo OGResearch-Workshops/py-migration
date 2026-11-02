@@ -1,6 +1,4 @@
-# Macroeconomic Modeling in Python: Closed-Economy QPM Workshop
-
-*October 2026 workshop for economists, not programmers.*
+# Migrating Macroeconomic Models from Matlab to Python
 
 This folder is a self-contained, hands-on tutorial. You will build, calibrate,
 simulate, and use for forecasting a small **semi-structural, "QPM-style"

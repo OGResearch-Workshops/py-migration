@@ -32,10 +32,12 @@ Python side.
 
 * `Model` &rarr; `Simultaneous`
 * `Plan` &rarr; `SimulationPlan` (and `SteadyPlan` for the steady state)
-* `tseries` / `Series` &rarr; `Series`
+* `Explanatory` &rarr; `Sequential`
+* `VAR`and `SVAR` &rarr; `RedVAR` and `StructVAR`
+
+* `Series` &rarr; `Series`
 * struct (databank) &rarr; `Databox`
-* `Explanatory` &rarr; `Explanatory` (and `Sequential`)
-* `VAR` / `SVAR` &rarr; `RedVAR` / `StructVAR`
+* `Dater` &rarr; `Period`
 * `Chartpack` &rarr; `Chartpack` (interactive Plotly charts)
 
 
@@ -83,8 +85,7 @@ db.to_csv_file("data_files/out.csv")
 * A list of transformations can be kept in a `.db.py` file and run against a
   databox with `db.execute_file("prepare_historical_data.db.py")`.
 
-
-### 3.3 The model file
+### 3.3 Write the model file
 
 The model file language is shared. The same blocks exist
 (`!transition-variables`, `!transition-shocks`, `!parameters`,
@@ -94,9 +95,9 @@ The model file language is shared. The same blocks exist
 hyphens and underscores are accepted in keywords (`!transition-variables` or
 `!transition_variables`).
 
-At the time of writing we did not find these Matlab directives in the Python
-parser: `!links`, `!dtrends`, `!ttrend`, `!import` / `!export`, `!switch`,
-`!function`.
+Time indices/subscripts are in square brackets, e.g. `[-1]`, as opposed to curly braces in Matlab, e.g. `{-1}`. Comments start with a `#` sign, as opposed to `%` in Matlab.
+
+### 3.4 Load the model file
 
 ```Matlab
 m = Model.fromFile( ...
@@ -115,7 +116,7 @@ model = ir.Simultaneous.from_file(
 ```
 
 
-### 3.4 Calibrate, steady state, solve
+### 3.5 Calibrate, steady state, solve
 
 ```Matlab
 model = assign(model, p);
@@ -143,8 +144,7 @@ model.solve_first_order()
 * Fixing a level or growth rate is done in Matlab through steady-state options
   (e.g. `FixGrowth=`) and in IrisPie through a `SteadyPlan` object.
 
-
-### 3.5 Simulate
+### 3.6 Simulate the model
 
 ```Matlab
 d = steadydb(m, 1:20);
@@ -188,7 +188,7 @@ sim_db = model.simulate(
   (`prepend_input=True`); in Matlab the default is `prependInput=false`.
 
 
-### 3.6 Conditional forecasts with plans
+### 3.7 Conditional forecasts with plans
 
 ```Matlab
 p = Plan.forModel(m, fcastRange);
@@ -217,7 +217,7 @@ sim_db = model.simulate(
   `shk_...`).
 
 
-### 3.7 Kalman filter
+### 3.8 Kalman filter
 
 ```Matlab
 [outDb, outModel, info] = kalmanFilter( ...
@@ -246,7 +246,7 @@ smooth_db = kalman_db["smooth_med"]
   (`stds_from_data=True`), as used in `05_filter_history.py`.
 
 
-### 3.8 One forecast round, end to end
+### 3.9 One forecast round, end to end
 
 The workshop pipeline is the template: `04` prepares the data, `05` filters
 the history and saves `filter_data.csv`, and `06` simulates forecasts from
@@ -254,7 +254,7 @@ that file. In Matlab the same sequence of steps applies, with the filtered
 databank passed straight on to `simulate`.
 
 
-### 3.9 Charts
+### 3.10 Charts
 
 ```Matlab
 ch = Chartpack( );
@@ -280,7 +280,7 @@ ch.plot(sim_db)
   Matlab figures.
 
 
-### 3.10 Saving and loading models
+### 3.11 Save and load models
 
 ```Matlab
 save("model.mat", "m");
@@ -328,14 +328,14 @@ are small and focused, and can be installed without a license server.
 
 ## 6. Porting checklist
 
-1. Port the **model file** first; most of it should work unchanged. Check it
+- [ ] Port the **model file** first; most of it should work unchanged. Check it
    against the list in section 3.3.
-2. Port the **data** next: load the same data into a `Databox` and compare a
+- [ ] Port the **data** next: load the same data into a `Databox` and compare a
    few series against the Matlab databank.
-3. Port the scripts **one task at a time**, in the order of section 3 (dates,
+- [ ] Port the scripts **one task at a time**, in the order of section 3 (dates,
    data, model, steady state, simulate, filter, forecast).
-4. Replace `m = f(m, ...)` patterns by in-place calls, and add `.copy()` where
+- [ ] Replace `m = f(m, ...)` patterns by in-place calls, and add `.copy()` where
    a separate version of an object is needed.
-5. Compare **steady states and one simulation** against the Matlab results
+- [ ] Compare **steady states and one simulation** against the Matlab results
    before going further.
-6. Only then port charts and reports.
+- [ ] Only then port charts and reports.

@@ -1,5 +1,5 @@
 
-# Migrating from Matlab to Python
+# Migrating from Matlab to Python: Context
 
 
 ---
@@ -20,6 +20,9 @@
 
 ### Why Python
 
+* Our choice was between Python and Julia; we chose Python for its longevity,
+  larger ecosystem, and wider familiarity among our users
+
 * Widely used, scriptable, non-compiled, general-purpose language
 
 * Mature numerical arrays and linear algebra (`numpy`, `scipy`)
@@ -31,9 +34,6 @@
   * a long track record: Python has been around for over 30 years, whereas
     younger platforms (e.g. Julia) carry a greater risk of being abandoned,
     discontinued, or fading away
-
-* Our choice was between Python and Julia; we chose Python for its longevity,
-  larger ecosystem, and wider familiarity among our users
 
 
 ---
