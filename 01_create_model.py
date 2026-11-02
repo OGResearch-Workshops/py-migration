@@ -5,7 +5,6 @@ Create and calibrate a model object from the source file
 
 # External packages
 import irispie as ir
-import sys
 
 # Internal modules
 import file_structure as fs
