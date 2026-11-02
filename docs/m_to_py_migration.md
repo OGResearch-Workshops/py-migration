@@ -6,7 +6,7 @@
 
 ### Why away from Matlab
 
-* Cost of Matlab licenses
+* Cost of Matlab licenses, internal and external (collaborative)
 
 * New hires increasingly arrive knowing Python (and R), not Matlab
 
@@ -22,6 +22,8 @@
 
 * Our choice was between Python and Julia; we chose Python for its longevity,
   larger ecosystem, and wider familiarity among our users
+
+* Ecosystem of packages going well beyond modeling: web scraping, AI, devops, platform orchestration, data warehousing, big data, etc...
 
 * Widely used, scriptable, non-compiled, general-purpose language
 
