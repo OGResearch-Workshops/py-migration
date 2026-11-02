@@ -64,7 +64,7 @@ fred_db["CPIAUCSL"].fill_missing(method="log_linear", )
 fred_db["CPIAUCNS"].fill_missing(method="log_linear", )
 fred_db["UNRATE"].fill_missing(method="linear", )
 
-print(fred_db0)
+print(fred_db)
 
 # Save the raw FRED data to a CSV file
 fred_db.to_csv_file(fs.FRED_DATA_FILE, )
