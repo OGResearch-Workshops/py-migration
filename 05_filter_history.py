@@ -22,8 +22,10 @@ model.check_steady()
 model.solve_first_order()
 
 
+# Load historical data from CSV file
 hist_db = ir.Databox.from_csv(fs.HISTORICAL_DATA_FILE, )
 
+# Create a new Databox with the observed data series for the Kalman filter
 obs_db = hist_db.copy(
     source_names=("y", "rs", "cpi", ),
     # target_names=lambda n: f"obs_{n}",
@@ -31,16 +33,24 @@ obs_db = hist_db.copy(
 )
 
 
+# Set up the filter span for the Kalman filter
 start_filt = ir.qq(2010,1)
 end_filt = ir.qq(2026,2)
 filter_span = start_filt >> end_filt
 
+
+# Run a plain vanilla Kalman filter on the observed data series, and return the
+# filtered data series and additional information
 kalman_db, info, = model.kalman_filter(
     obs_db, filter_span,
     return_info=True,
     rescale_variance=True,
 )
 
+
+# Run an alternative Kalman filter with a different standard deviation for the
+# trend shock during COVID, and return the filtered data series and
+# additional
 std_db = ir.Databox(
     std_shk_ad_y_tnd=ir.Series(periods=ir.qq(2020,1,...,2020,4), values=10),
 )
