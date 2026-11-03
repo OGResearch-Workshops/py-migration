@@ -1,0 +1,156 @@
+% QPM-style closed economy model
+
+
+!transition_variables
+
+    "Log real GDP" y
+    "Log real GDP trend" y_tnd
+    "Log real GDP gap" y_gap
+    "Log real GDP, Q/Q PA" ad_y
+    "Log real GDP, Y/Y" d4_y
+    "Log real GDP trend, Q/Q PA" ad_y_tnd
+    "Log real GDP trend, Y/Y" d4_y_tnd
+
+    "Log CPI" cpi
+    "Log CPI, Q/Q PA" ad_cpi
+    "Log CPI, Y/Y" d4_cpi
+    "Short-term inflation expectations" ad_cpi_ste
+
+    "Nominal short rate" rs
+    "Nominal short rate, unconstrained" rs_unc
+    "Monetary policy reaction term" mpr
+
+    "Real short rate" rrs
+    "Real short rate trend" rrs_tnd
+    "Real short rate gap" rrs_gap
+
+
+!transition_shocks
+
+    "Shock to real GDP trend growth" shk_ad_y_tnd
+    "Shock to real GDP gap" shk_y_gap
+    "Shock to inflation" shk_ad_cpi
+    "Shock to inflation expectations" shk_ad_cpi_ste
+    "Shock to nominal interest rate" shk_rs
+    "Shock to real rate trend" shk_rrs_tnd
+
+
+!parameters
+
+    "S/S Real short rate" ss_rrs
+    "S/S CPI inflation rate" ss_ad_cpi
+    "S/S Real GDP growth rate" ss_ad_y
+
+    "A/R Real GDP trend, Q/Q PA" c0_ad_y_tnd
+
+    "A/R Real GDP gap" c0_y_gap
+    "Semi-elasticity of real GDP gap to real rate gap" c1_y_gap
+
+    "A/R Inflation" c0_ad_cpi
+    "Slope of Phillips curve" c1_ad_cpi
+
+    "Weight on forward-looking inflation expectations" c1_ad_cpi_ste
+    "Effect of ZLB on expectations" c2_ad_cpi_ste
+
+    "A/R Monetary policy" c0_rs
+    "Response to inflation forecast" c1_mpr
+    "A/R Real rate trend" c0_rrs_tnd
+
+
+!transition_equations
+
+    "Real GDP trend gap identity"
+    y = y_tnd + y_gap;
+
+    "Potential growth"
+    ad_y_tnd =
+        + c0_ad_y_tnd * ad_y_tnd{-1}
+        + (1 - c0_ad_y_tnd) * ss_ad_y
+        + shk_ad_y_tnd
+    !! ad_y_tnd = ss_ad_y;
+
+    "Aggregate demand"
+    y_gap =
+        + c0_y_gap * y_gap{-1}
+        - c1_y_gap * rrs_gap
+        + shk_y_gap
+    !! y_gap = 0;
+
+    "Phillips curve"
+    ad_cpi =
+        + c0_ad_cpi * ad_cpi{-1}
+        + (1 - c0_ad_cpi) * ad_cpi_ste
+        + c1_ad_cpi * y_gap
+        + shk_ad_cpi
+    !! ad_cpi = ss_ad_cpi;
+
+    "Short-term inflation expectations"
+    ad_cpi_ste =
+        + c1_ad_cpi_ste * ad_cpi{+1}
+        + (1 - c1_ad_cpi_ste) * ss_ad_cpi
+        + shk_ad_cpi_ste
+        + c2_ad_cpi_ste * (rs - rs_unc)
+    !! ad_cpi_ste = ss_ad_cpi;
+
+    "Monetary policy reaction function, unconstrained"
+    rs_unc =
+        + c0_rs * rs{-1}
+        + (1 - c0_rs)*(ss_rrs + ss_ad_cpi + mpr)
+        + shk_rs
+    !! rs_unc = ss_rrs + ss_ad_cpi;
+
+    "Monetary policy reaction term"
+    mpr = c1_mpr*(d4_cpi{+3} - ss_ad_cpi) !! mpr = 0;
+
+    "Zero floor on nominal rate"
+    rs = max(rs_unc, 0) !! rs = rs_unc;
+
+    "Fisher equation"
+    rrs = rs - ad_cpi{+1};
+
+    "Real rate trend-gap identity"
+    rrs = rrs_tnd + rrs_gap;
+
+    "Real rate trend"
+    rrs_tnd =
+        + c0_rrs_tnd * rrs_tnd{-1}
+        + (1 - c0_rrs_tnd) * ss_rrs
+        + shk_rrs_tnd
+    !! rrs_tnd = ss_rrs;
+
+
+    !for cpi, y, y_tnd !do
+        ad_? = 4 * diff(?);
+        d4_? = diff(?, -4);
+    !end
+
+
+!measurement_variables
+
+    "Observed real GDP" obs_y
+    "Observed nominal short rate" obs_rs
+    "Observed CPI" obs_cpi
+
+    "Observed real GDP growth" obs_ad_y
+    "Observed real GDP gap" obs_y_gap
+    "Observed CPI inflation" obs_ad_cpi
+
+
+!measurement_shocks
+
+    "Measurement error on real GDP" shk_obs_y
+    "Measurement error on CPI" shk_obs_cpi
+    "Measurement error on nominal rate" shk_obs_rs
+
+
+!measurement_equations
+
+    obs_y = y + shk_obs_y;
+    obs_cpi = cpi + shk_obs_cpi;
+    obs_rs = rs + shk_obs_rs;
+
+    obs_ad_y = ad_y;
+    obs_y_gap = y_gap;
+    obs_ad_cpi = ad_cpi;
+
+

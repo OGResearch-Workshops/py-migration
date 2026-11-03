@@ -1,0 +1,19 @@
+Let's test-migrate the model file and the two matlab scripts that use the Iris
+Toolbox, ~/iris-toolbox.nosync/, to python using the irispie package. The
+irispie package is part of the active virtual environment.
+
+Follow these rules:
+
+* Keep the logic of the workflow exactly the same.
+
+* Preserve comments and add some more comments when useful.
+
+* Implement the programs as pure scripts, do not define functions, and do not
+  create any extra abstract structures.
+
+* Do not save any results or objects apart from those actually saved in the
+  original matlab scripts.
+
+* Do not create or execute any tests, just migrate the code and make sure it
+  runs without errors.
+
